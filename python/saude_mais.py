@@ -10,7 +10,7 @@ app = FastAPI()
 # Adiciona o middleware CORS para permitir requisições do navegador
 app.add_middleware(
 	CORSMiddleware,
-	allow_origins=["*"],  
+	allow_origins=["*"],  #teste # especificação dos domínios permitidos
 	allow_credentials=True,
 	allow_methods=["*"],
 	allow_headers=["*"],
