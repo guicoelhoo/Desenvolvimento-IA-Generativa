@@ -14,11 +14,26 @@ function atualizarSidebar() {
     // Gera resumo do prontuário e resposta
     const resumoPergunta = (item.prontuarioOriginal || '').split('\n')[0].slice(0, 32) + (item.prontuarioOriginal.length > 32 ? '...' : '');
     const resumoResposta = (item.resposta || '').split('\n')[0].slice(0, 32) + (item.resposta.length > 32 ? '...' : '');
-    li.innerHTML = `<div class='fw-bold' style='font-size:0.97em;'>${escapeHtml(resumoPergunta)}</div><div style='font-size:0.93em; color:#555;'>${escapeHtml(resumoResposta)}</div>`;
-    li.className = (conversaSelecionada === idx) ? 'active' : '';
+    li.innerHTML = `<div class='fw-bold' style='font-size:0.97em;'>${escapeHtml(resumoPergunta)}</div><div style='font-size:0.93em; color:#555;'>${escapeHtml(resumoResposta)}</div><button class='btn btn-sm btn-link text-danger p-0 position-absolute end-0 top-0 me-2 mt-2' title='Deletar' onclick='event.stopPropagation(); deletarConversa(${idx});' tabindex='-1'>🗑️</button>`;
+    li.className = (conversaSelecionada === idx) ? 'active position-relative' : 'position-relative';
     li.onclick = () => mostrarConversa(idx);
     sidebar.appendChild(li);
   });
+}
+
+window.deletarConversa = function(idx) {
+  if (confirm('Deseja realmente apagar esta conversa?')) {
+    historicoConversas.splice(idx, 1);
+    salvarHistorico();
+    if (conversaSelecionada === idx) {
+      conversaSelecionada = null;
+      document.getElementById("prompt").value = "";
+      document.getElementById("resposta").textContent = "";
+    } else if (conversaSelecionada > idx) {
+      conversaSelecionada--;
+    }
+    atualizarSidebar();
+  }
 }
 
 function mostrarConversa(idx) {
@@ -106,7 +121,7 @@ function limparResposta() {
   document.getElementById("resposta").textContent = "";
 }
 
-// Inicializa sidebar ao carregar a página e adiciona evento ao botão Nova Conversa
+// Inicializa sidebar ao carregar a página e adiciona eventos aos botões
 window.addEventListener('DOMContentLoaded', () => {
   atualizarSidebar();
   const btnNova = document.getElementById('nova-conversa-btn');
@@ -122,6 +137,19 @@ window.addEventListener('DOMContentLoaded', () => {
         campoOutra.value = '';
       }
       atualizarSidebar();
+    };
+  }
+  const btnDeletar = document.getElementById('deletar-historico-btn');
+  if (btnDeletar) {
+    btnDeletar.onclick = () => {
+      if (confirm('Tem certeza que deseja apagar todo o histórico de conversas?')) {
+        historicoConversas = [];
+        salvarHistorico();
+        conversaSelecionada = null;
+        atualizarSidebar();
+        document.getElementById("prompt").value = "";
+        document.getElementById("resposta").textContent = "";
+      }
     };
   }
 });

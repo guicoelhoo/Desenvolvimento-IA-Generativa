@@ -40,10 +40,11 @@
   position: relative;
 }
 #sidebar .history-list li.active {
-  background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%);
-  color: #fff;
+  background: #b6c6e0;
+  color: #1e3c72;
   font-weight: 700;
   box-shadow: 0 2px 8px 0 rgba(42, 82, 152, 0.10);
+  border-left: 4px solid #2a5298;
 }
 #sidebar .history-list li:hover:not(.active) {
   background: #d2e3f7;
